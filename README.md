@@ -1,4 +1,4 @@
-# cdp-perf-test-suite-template
+# grants-payment-service-perf-test
 
 A JMeter based test runner for the CDP Platform.
 
