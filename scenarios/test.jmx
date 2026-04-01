@@ -273,7 +273,7 @@ synchronized (lock) {
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="POST /process-payments/{date}">
           <stringProp name="HTTPSampler.domain">${gps_api_url}</stringProp>
           <stringProp name="HTTPSampler.protocol">https</stringProp>
-          <stringProp name="HTTPSampler.path">${gps_api_endpoint}/${process_date}</stringProp>
+          <stringProp name="HTTPSampler.path">${gps_api_endpoint}/2026-04-01</stringProp>
           <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
           <stringProp name="HTTPSampler.method">POST</stringProp>
           <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
