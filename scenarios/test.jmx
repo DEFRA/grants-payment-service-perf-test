@@ -293,10 +293,6 @@ synchronized (lock) {
                 <stringProp name="Header.name">Accept-Encoding</stringProp>
                 <stringProp name="Header.value">*</stringProp>
               </elementProp>
-              <elementProp name="" elementType="Header">
-                <stringProp name="Header.name">process-date</stringProp>
-                <stringProp name="Header.value">${process-date}</stringProp>
-              </elementProp>
             </collectionProp>
           </HeaderManager>
           <hashTree/>
