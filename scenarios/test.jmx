@@ -63,28 +63,28 @@
             <stringProp name="Argument.value">${__P(duration_seconds,60)}</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
-          <elementProp name="agreements_api_url" elementType="Argument">
-            <stringProp name="Argument.name">agreements_api_url</stringProp>
-            <stringProp name="Argument.value">farming-grants-agreements-api.perf-test.cdp-int.defra.cloud</stringProp>
+          <elementProp name="gps_api_url" elementType="Argument">
+            <stringProp name="Argument.name">gps_api_url</stringProp>
+            <stringProp name="Argument.value">grants-payment-service.perf-test.cdp-int.defra.cloud</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
             <stringProp name="Argument.desc"></stringProp>
           </elementProp>
-          <elementProp name="agreements_api_endpoint" elementType="Argument">
-            <stringProp name="Argument.name">agreements_api_endpoint</stringProp>
-            <stringProp name="Argument.value">/api/test/queue-message</stringProp>
+          <elementProp name="gps_api_endpoint" elementType="Argument">
+            <stringProp name="Argument.name">gps_api_endpoint</stringProp>
+            <stringProp name="Argument.value">/grants-payment-service/api/test/process-payments</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
             <stringProp name="Argument.desc"></stringProp>
           </elementProp>
           <elementProp name="x-api-dev" elementType="Argument">
             <stringProp name="Argument.name">x-api-dev</stringProp>
-            <stringProp name="Argument.value">6MyeAl2eTTqefznt4AJqTHfqhbv7DKD3</stringProp>
+            <stringProp name="Argument.value">Y4iip3O2scVJ7U071bzcq1T3b48NKtz0</stringProp>
             <stringProp name="Argument.desc">Dev environment x-api key</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
           <elementProp name="process-date" elementType="Argument">
             <stringProp name="Argument.name">process-date</stringProp>
-            <stringProp name="Argument.value">2026-07-15</stringProp>
-            <stringProp name="Argument.desc">Payment process date</stringProp>
+            <stringProp name="Argument.value">${__P(gps_process_date)}</stringProp>
+            <stringProp name="Argument.desc">CDP Secret value</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
         </collectionProp>
@@ -124,7 +124,7 @@
         </elementProp>
       </ThreadGroup>
       <hashTree>
-        <JSR223Sampler guiclass="TestBeanGUI" testclass="JSR223Sampler" testname="JSR223 Sampler">
+        <JSR223Sampler guiclass="TestBeanGUI" testclass="JSR223Sampler" testname="JSR223 Sampler" enabled="true">
           <stringProp name="cacheKey">true</stringProp>
           <stringProp name="filename"></stringProp>
           <stringProp name="parameters"></stringProp>
@@ -135,7 +135,7 @@ props.setProperty(&apos;accumulatedResponseTimeMs&apos;, &apos;0&apos;)</stringP
         </JSR223Sampler>
         <hashTree/>
       </hashTree>
-      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="gps-api">
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="gps-api" enabled="true">
         <intProp name="ThreadGroup.num_threads">1</intProp>
         <intProp name="ThreadGroup.ramp_time">1</intProp>
         <stringProp name="ThreadGroup.duration">${duration_seconds}</stringProp>
@@ -147,11 +147,11 @@ props.setProperty(&apos;accumulatedResponseTimeMs&apos;, &apos;0&apos;)</stringP
         </elementProp>
       </ThreadGroup>
       <hashTree>
-        <ConstantTimer guiclass="ConstantTimerGui" testclass="ConstantTimer" testname="Human Interaction Delay">
+        <ConstantTimer guiclass="ConstantTimerGui" testclass="ConstantTimer" testname="Human Interaction Delay" enabled="true">
           <stringProp name="ConstantTimer.delay">3000</stringProp>
         </ConstantTimer>
         <hashTree/>
-        <ConfigTestElement guiclass="HttpDefaultsGui" testclass="ConfigTestElement" testname="HTTP Request Defaults">
+        <ConfigTestElement guiclass="HttpDefaultsGui" testclass="ConfigTestElement" testname="HTTP Request Defaults" enabled="true">
           <stringProp name="HTTPSampler.domain">grants-ui.${environment}.cdp-int.defra.cloud</stringProp>
           <stringProp name="HTTPSampler.protocol">https</stringProp>
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
@@ -271,9 +271,9 @@ synchronized (lock) {
           <hashTree/>
         </hashTree>
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="POST /process-payments/{date}">
-          <stringProp name="HTTPSampler.domain">ephemeral-protected.api.dev.cdp-int.defra.cloud</stringProp>
+          <stringProp name="HTTPSampler.domain">${gps_api_url}</stringProp>
           <stringProp name="HTTPSampler.protocol">https</stringProp>
-          <stringProp name="HTTPSampler.path">/grants-payment-service/api/test/process-payments/${process-date}</stringProp>
+          <stringProp name="HTTPSampler.path">${gps_api_endpoint}/${process-date}</stringProp>
           <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
           <stringProp name="HTTPSampler.method">POST</stringProp>
           <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
@@ -283,7 +283,7 @@ synchronized (lock) {
           </elementProp>
         </HTTPSamplerProxy>
         <hashTree>
-          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="false">
+          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager">
             <collectionProp name="HeaderManager.headers">
               <elementProp name="" elementType="Header">
                 <stringProp name="Header.name">x-api-key</stringProp>
@@ -300,7 +300,7 @@ synchronized (lock) {
             </collectionProp>
           </HeaderManager>
           <hashTree/>
-          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Status Code Assertion">
+          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Status Code Assertion" enabled="true">
             <collectionProp name="Asserion.test_strings">
               <stringProp name="49586">200</stringProp>
             </collectionProp>
@@ -315,14 +315,14 @@ synchronized (lock) {
               <stringProp name="896940602">${process-date}</stringProp>
             </collectionProp>
             <stringProp name="Assertion.custom_message"></stringProp>
-            <stringProp name="Assertion.test_field">Assertion.response_data</stringProp>
+            <stringProp name="Assertion.test_field">Assertion.response_message</stringProp>
             <boolProp name="Assertion.assume_success">true</boolProp>
             <intProp name="Assertion.test_type">2</intProp>
             <stringProp name="Scope.variable">pageTitle</stringProp>
           </ResponseAssertion>
           <hashTree/>
         </hashTree>
-        <ResultCollector guiclass="SummaryReport" testclass="ResultCollector" testname="Summary Report" enabled="true">
+        <ResultCollector guiclass="SummaryReport" testclass="ResultCollector" testname="Summary Report">
           <boolProp name="ResultCollector.error_logging">false</boolProp>
           <objProp>
             <name>saveConfig</name>
@@ -359,7 +359,7 @@ synchronized (lock) {
           <stringProp name="filename"></stringProp>
         </ResultCollector>
         <hashTree/>
-        <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
+        <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree">
           <boolProp name="ResultCollector.error_logging">false</boolProp>
           <objProp>
             <name>saveConfig</name>
